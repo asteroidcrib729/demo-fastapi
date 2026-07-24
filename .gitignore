@@ -1,0 +1,5 @@
+.env
+main.ipynb
+.venv/**
+.vscode/**
+pyrefly.toml
