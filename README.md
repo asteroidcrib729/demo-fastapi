@@ -1,0 +1,1 @@
+# fastapi-supabase-application
