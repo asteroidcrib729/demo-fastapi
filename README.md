@@ -1,1 +1,1 @@
-# fastapi-supabase-application
+# FastAPI + Supabase Application
