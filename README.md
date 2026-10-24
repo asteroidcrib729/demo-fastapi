@@ -6,9 +6,9 @@ fetching database records over HTTP. I use **FastAPI**, **Prisma Postgres**,
 **Render**, and **uv**. The API exposes public sample records, and I keep the
 application in one Python file.
 
-API: [fetch records](https://demo-fastapi.onrender.com)
-\| [interactive documentation](https://demo-fastapi.onrender.com/docs)
-\| [process health](https://demo-fastapi.onrender.com/health)
+API: [fetch records](https://demo-fast-api.onrender.com)
+\| [interactive documentation](https://demo-fast-api.onrender.com/docs)
+\| [process health](https://demo-fast-api.onrender.com/health)
 
 ## Contents
 
@@ -197,7 +197,7 @@ service is managed through Render's service settings, not a Blueprint sync.
 
 | Setting | Value |
 | --- | --- |
-| Service name | `demo-fastapi` |
+| Service name | `demo-fast-api` |
 | Runtime | Exactly Python 3.14.7, pinned in `.python-version` and `PYTHON_VERSION` |
 | Region / plan | Singapore / free |
 | Branch | `main` |
