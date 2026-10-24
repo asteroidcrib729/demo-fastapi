@@ -16,7 +16,7 @@ if not DATABASE_URL:
     raise RuntimeError("Set DATABASE_URL to your Prisma Postgres connection string.")
 
 logger = logging.getLogger(__name__)
-app = FastAPI(title="Prisma Postgres Records API", version="1.0.0")
+app = FastAPI(title="demo-fastapi", version="1.0.0")
 
 
 class Record(BaseModel):

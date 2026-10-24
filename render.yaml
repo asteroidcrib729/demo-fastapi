@@ -4,7 +4,7 @@ previews:
 
 services:
   - type: web
-    name: demo-fast-api
+    name: demo-fastapi
     runtime: python
     plan: free
     region: singapore

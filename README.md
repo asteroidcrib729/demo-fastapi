@@ -1,6 +1,6 @@
-# FastAPI + Prisma Postgres Records API
+# demo-fastapi
 
-I built this project to demonstrate a complete backend deployment: creating a
+I built demo-fastapi to demonstrate a complete backend deployment: creating a
 Python API, connecting it to PostgreSQL, deploying it as a web service, and
 fetching database records over HTTP. I use **FastAPI**, **Prisma Postgres**,
 **Render**, and **uv**. The API exposes public sample records, and I keep the
@@ -43,8 +43,8 @@ are two ways to reach the same database; they are not separate databases.
 Automated tests mock the connection and create no database. Preview environments
 are disabled, and I configure no Prisma branches or preview database automation.
 
-The provisioned Prisma project and database are named `demo-api-production` in
-Singapore, and the project's only branch is the production `main` branch.
+The production Prisma Postgres database is in Singapore, and the project's
+only branch is the production `main` branch.
 
 This replaces the original Railway service and Supabase integration. Because
 the previous resources were deleted, setup creates a fresh table and sample
@@ -191,16 +191,16 @@ from this repository's `main` branch. Prisma hosts the database separately;
 the Render configuration does not provision another database.
 
 The service is linked directly to
-[`asteroidcrib729/demo-api`](https://github.com/asteroidcrib729/demo-api).
+[`asteroidcrib729/demo-fastapi`](https://github.com/asteroidcrib729/demo-fastapi).
 `render.yaml` is the reference configuration for recreating it; this existing
 service is managed through Render's service settings, not a Blueprint sync.
-Render assigned the hostname `demo-fast-api-97ia.onrender.com` because the
-unsuffixed names were reserved. The service's display name is `demo-fast-api`;
-changing that display name does not change its assigned hostname.
+The project's canonical name and Render display name are `demo-fastapi`.
+Render's assigned hostname is `demo-fast-api-97ia.onrender.com`; this hosting
+identifier is independent of the project name and remains the accepted live URL.
 
 | Setting | Value |
 | --- | --- |
-| Service name | `demo-fast-api` |
+| Service name | `demo-fastapi` |
 | Runtime | Exactly Python 3.14.7, pinned in `.python-version` and `PYTHON_VERSION` |
 | Region / plan | Singapore / free |
 | Branch | `main` |
