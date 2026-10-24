@@ -40,6 +40,13 @@ class RecordsAPITests(unittest.TestCase):
     def test_empty_result_is_an_empty_list(self):
         self.assertEqual(self.client.get("/records").json(), [])
 
+    def test_root_returns_records_without_a_path_suffix(self):
+        records = [{"id": 1, "name": "Example", "value": "Demo", "status": "active"}]
+        self.connection.execute.return_value.fetchall.return_value = records
+        response = self.client.get("/")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), records)
+
     def test_invalid_page_is_rejected_before_database_access(self):
         for query in ["limit=0", "limit=101", "offset=-1", "limit=abc"]:
             with self.subTest(query=query):

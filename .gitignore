@@ -6,6 +6,6 @@
 __pycache__/
 *.py[cod]
 .ruff_cache/
-.vscode/
-main.ipynb
-pyrefly.toml
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json

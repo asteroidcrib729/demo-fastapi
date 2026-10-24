@@ -6,9 +6,9 @@ fetching database records over HTTP. I use **FastAPI**, **Prisma Postgres**,
 **Render**, and **uv**. The API exposes public sample records, and I keep the
 application in one Python file.
 
-API: [fetch records](https://fastapi-prisma-records-api.onrender.com/records)
-\| [interactive documentation](https://fastapi-prisma-records-api.onrender.com/docs)
-\| [process health](https://fastapi-prisma-records-api.onrender.com/health)
+API: [fetch records](https://demo-fastapi.onrender.com)
+\| [interactive documentation](https://demo-fastapi.onrender.com/docs)
+\| [process health](https://demo-fastapi.onrender.com/health)
 
 ## Contents
 
@@ -57,18 +57,21 @@ data; it does not recover the deleted records.
 | [`main.py`](main.py) | Application, response model, health endpoint, and SQL read endpoint. |
 | [`setup_database.py`](setup_database.py) | Explicit, manual database initialization command. |
 | [`schema.sql`](schema.sql) | Table definition and three public sample records. |
-| [`pyproject.toml`](pyproject.toml) | Metadata, Python compatibility, dependencies, development tools, and Ruff rules. |
+| [`pyproject.toml`](pyproject.toml) | Metadata, Python 3.14.7 requirement, dependencies, Ruff rules, and Pyrefly configuration. |
 | [`uv.lock`](uv.lock) | Exact dependency versions for repeatable installation. |
-| [`.python-version`](.python-version) | Selects Python 3.14 for uv and Render. |
+| [`.python-version`](.python-version) | Pins Python 3.14.7 for uv and Render. |
 | [`.env.example`](.env.example) | Placeholder connection strings without real credentials. |
 | [`render.yaml`](render.yaml) | Render settings and disabled Blueprint previews. |
 | [`tests/test_api.py`](tests/test_api.py) | HTTP checks with a mocked database connection. |
-| [`.gitignore`](.gitignore) | Excludes credentials, environments, caches, and local editor/notebook files. |
+| [`.gitignore`](.gitignore) | Excludes credentials, environments, caches, and private editor settings. |
+| [`.vscode/settings.json`](.vscode/settings.json) | Workspace interpreter and `.env.local` selection. |
+| [`.vscode/extensions.json`](.vscode/extensions.json) | Python and Pyrefly extension recommendations. |
 | [`README.md`](README.md) | Architecture, commands, deployment, and source explanation. |
 
 `pyproject.toml` and `uv.lock` replace `requirements.txt`; `render.yaml` replaces
-`railway.toml`. Local credentials, environments, notebooks, and editor settings
-are not part of the published source.
+`railway.toml`. Local credentials, environments, and private editor settings
+are not part of the published source. The obsolete notebook and standalone
+Pyrefly configuration have been removed.
 
 ## Run locally with uv
 
@@ -77,11 +80,11 @@ these commands from the repository root in PowerShell:
 
 ```powershell
 uv sync --locked
-Copy-Item .env.example .env
+Copy-Item .env.example .env.local
 ```
 
-Only copy the example when `.env` does not already contain your working
-configuration. Edit `.env` privately with the pooled and direct URLs for the
+Only copy the example when `.env.local` does not already contain your working
+configuration. Edit `.env.local` privately with the pooled and direct URLs for the
 project's production database:
 
 ```dotenv
@@ -90,8 +93,8 @@ DIRECT_URL="postgres://USER:PASSWORD@db.prisma.io:5432/postgres?sslmode=require"
 ```
 
 These are placeholders. Obtain real credentials from Prisma Console. Keep
-`sslmode=require` and keep `.env` out of Git. Exported environment variables
-take precedence over `.env`. On Render, the service uses its configured
+`sslmode=require` and keep `.env.local` out of Git. Exported environment variables
+take precedence over `.env.local`. On Render, the service uses its configured
 environment variable instead of a local file.
 
 After database setup, start the API:
@@ -108,12 +111,26 @@ unnecessary. If an old `.venv` references a removed Python installation,
 rename it and run `uv sync --locked` again. If the default uv cache is
 inaccessible, add `--cache-dir .uv-cache` immediately after `uv`.
 
+### VS Code interpreter and import diagnostics
+
+The shared workspace settings select `.venv` as the default interpreter and
+`.env.local` as the environment file. I keep Pyrefly configuration in
+`pyproject.toml`, where its interpreter discovery command asks uv for this
+project's environment. This prevents dependency resolution from relying on a
+global Python installation.
+
+After `uv sync --locked`, use **Python: Select Interpreter** and select
+`.venv\Scripts\python.exe` if VS Code has remembered an earlier interpreter.
+Run **Pyrefly: Restart Server** or **Developer: Reload Window** once if stale
+import diagnostics remain. The configuration resolves installed dependencies;
+it does not hide missing-import errors.
+
 ## Set up the production database
 
 1. Create or select this project's single production database in
    [Prisma Console](https://console.prisma.io/). Use Singapore to match Render.
 2. Generate a connection credential and put its pooled and direct PostgreSQL
-   URLs in `.env`. Both must identify the same production database.
+   URLs in `.env.local`. Both must identify the same production database.
 3. Initialize it explicitly:
 
    ```powershell
@@ -134,7 +151,7 @@ Render only needs `DATABASE_URL`; I keep `DIRECT_URL` for setup.
 
 | Method and path | Result |
 | --- | --- |
-| `GET /records` | Up to 100 records ordered by `id`. |
+| `GET /` or `GET /records` | Up to 100 records ordered by `id`. |
 | `GET /records?limit=2&offset=0` | Two records, starting at the first row. |
 | `GET /health` | `{"status":"ok"}` when the API process is serving requests. |
 
@@ -180,8 +197,8 @@ service is managed through Render's service settings, not a Blueprint sync.
 
 | Setting | Value |
 | --- | --- |
-| Service name | `fastapi-prisma-records-api` |
-| Runtime | Python, selected by `.python-version` |
+| Service name | `demo-fastapi` |
+| Runtime | Exactly Python 3.14.7, pinned in `.python-version` and `PYTHON_VERSION` |
 | Region / plan | Singapore / free |
 | Branch | `main` |
 | Build | `uv sync --locked --no-dev` |
@@ -218,7 +235,9 @@ take longer; see [Render's free-service behavior](https://render.com/docs/free).
 
 ### `main.py`: configuration and model
 
-`load_dotenv()` loads local configuration without replacing exported variables.
+`load_dotenv(Path(__file__).with_name(".env.local"))` loads the configuration
+beside the source file without replacing exported variables, even if the
+process starts in a different working directory.
 `DATABASE_URL` is required at import time, so missing configuration stops startup
 with a clear message. Creating the app does not open a database connection.
 
@@ -229,7 +248,9 @@ match those requirements. FastAPI validates and serializes rows using
 
 ### `main.py`: request handling and SQL
 
-`health()` returns process health. `get_records()` uses regular `def` because
+`health()` returns process health. Both `/` and `/records` use the same
+`get_records()` function; the root alias keeps the address short. The function
+uses regular `def` because
 Psycopg is synchronous. FastAPI runs this handler in its thread pool, keeping
 blocking database work out of the event loop.
 
@@ -270,7 +291,8 @@ testing and linting. `uv.lock` records exact versions across supported platforms
 installation omits development tools, and `--no-sync` prevents package changes
 when the service starts.
 
-`.python-version` selects Python's minor version. `.env.example` documents
+`.python-version` pins Python to exactly 3.14.7, matching `requires-python` and
+Render's `PYTHON_VERSION`. `.env.example` documents
 configuration without publishing credentials. `.gitignore` protects local
 secrets and generated files. `render.yaml` describes hosting settings, not
 the Prisma database schema or credentials.
@@ -291,7 +313,7 @@ Render is the separate end-to-end deployment check.
 On October 24, 2026, I verified the initial Render deployment against the
 production database: `/records` returned all three sample rows; pagination and
 empty pages worked; an invalid limit returned 422; and `/health`, `/docs`, and
-`/openapi.json` returned 200. The seven automated tests, Ruff checks, formatting,
+`/openapi.json` returned 200. The initial seven automated tests, Ruff checks, formatting,
 dependency compatibility check, and Render public JSON Schema validation passed.
 This records that verification, rather than guaranteeing future service uptime.
 
@@ -299,7 +321,7 @@ This records that verification, rather than guaranteeing future service uptime.
 
 | Symptom | What I check |
 | --- | --- |
-| Startup says `Set DATABASE_URL` | Populate `.env` or the Render environment variable. |
+| Startup says `Set DATABASE_URL` | Populate `.env.local` or the Render environment variable. |
 | `/records` returns 503 | Check database availability, PostgreSQL URL, TLS, and table initialization. |
 | Setup says `Set DIRECT_URL` | Supply the direct URL for the same production database. |
 | Setup fails on an existing table | Compare its columns with `schema.sql`; setup does not reset tables. |

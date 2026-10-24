@@ -1,9 +1,9 @@
 [project]
-name = "fastapi-prisma-records-api"
+name = "demo-fastapi"
 version = "1.0.0"
 description = "A small FastAPI service that reads demonstration records from Prisma Postgres."
 readme = "README.md"
-requires-python = ">=3.14,<3.15"
+requires-python = "==3.14.7"
 dependencies = [
     "fastapi>=0.139,<1",
     "psycopg[binary]>=3.3,<4",
@@ -23,3 +23,9 @@ target-version = "py314"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP"]
+
+[tool.pyrefly]
+project-includes = ["main.py", "setup_database.py", "tests/**/*.py"]
+python-interpreter-find-command = [
+    "uv", "--cache-dir", ".uv-cache", "python", "find", "--no-python-downloads",
+]

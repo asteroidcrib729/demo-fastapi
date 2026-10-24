@@ -1,5 +1,6 @@
 import logging
 import os
+from pathlib import Path
 from typing import Annotated
 
 import psycopg
@@ -8,7 +9,7 @@ from fastapi import FastAPI, HTTPException, Query
 from psycopg.rows import dict_row
 from pydantic import BaseModel
 
-load_dotenv()
+load_dotenv(Path(__file__).with_name(".env.local"))
 
 DATABASE_URL = os.getenv("DATABASE_URL", "").strip()
 if not DATABASE_URL:
@@ -31,6 +32,7 @@ def health() -> dict[str, str]:
     return {"status": "ok"}
 
 
+@app.get("/", response_model=list[Record], include_in_schema=False)
 @app.get("/records", response_model=list[Record])
 def get_records(
     limit: Annotated[int, Query(ge=1, le=100)] = 100,
