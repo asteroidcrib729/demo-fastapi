@@ -6,9 +6,9 @@ fetching database records over HTTP. I use **FastAPI**, **Prisma Postgres**,
 **Render**, and **uv**. The API exposes public sample records, and I keep the
 application in one Python file.
 
-API: [fetch records](https://demo-fast-api.onrender.com)
-\| [interactive documentation](https://demo-fast-api.onrender.com/docs)
-\| [process health](https://demo-fast-api.onrender.com/health)
+API: [fetch records](https://demo-fast-api-97ia.onrender.com)
+\| [interactive documentation](https://demo-fast-api-97ia.onrender.com/docs)
+\| [process health](https://demo-fast-api-97ia.onrender.com/health)
 
 ## Contents
 
@@ -194,6 +194,9 @@ The service is linked directly to
 [`asteroidcrib729/demo-api`](https://github.com/asteroidcrib729/demo-api).
 `render.yaml` is the reference configuration for recreating it; this existing
 service is managed through Render's service settings, not a Blueprint sync.
+Render assigned the hostname `demo-fast-api-97ia.onrender.com` because the
+unsuffixed names were reserved. The service's display name is `demo-fast-api`;
+changing that display name does not change its assigned hostname.
 
 | Setting | Value |
 | --- | --- |
