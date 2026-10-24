@@ -6,6 +6,10 @@ fetching database records over HTTP. I use **FastAPI**, **Prisma Postgres**,
 **Render**, and **uv**. The API exposes public sample records, and I keep the
 application in one Python file.
 
+API: [fetch records](https://fastapi-prisma-records-api.onrender.com/records)
+\| [interactive documentation](https://fastapi-prisma-records-api.onrender.com/docs)
+\| [process health](https://fastapi-prisma-records-api.onrender.com/health)
+
 ## Contents
 
 - [How it works](#how-it-works)
@@ -38,6 +42,9 @@ connect to that same database. The pooled runtime URL and the direct setup URL
 are two ways to reach the same database; they are not separate databases.
 Automated tests mock the connection and create no database. Preview environments
 are disabled, and I configure no Prisma branches or preview database automation.
+
+The provisioned Prisma project and database are named `demo-api-production` in
+Singapore, and the project's only branch is the production `main` branch.
 
 This replaces the original Railway service and Supabase integration. Because
 the previous resources were deleted, setup creates a fresh table and sample
@@ -166,6 +173,11 @@ The intended deployment is one free Python web service in Singapore, built
 from this repository's `main` branch. Prisma hosts the database separately;
 the Render configuration does not provision another database.
 
+The service is linked directly to
+[`asteroidcrib729/demo-api`](https://github.com/asteroidcrib729/demo-api).
+`render.yaml` is the reference configuration for recreating it; this existing
+service is managed through Render's service settings, not a Blueprint sync.
+
 | Setting | Value |
 | --- | --- |
 | Service name | `fastapi-prisma-records-api` |
@@ -275,6 +287,13 @@ Tests cover process health, record serialization, pagination validation, empty
 results, safe database errors, connection cleanup, and rejected write methods.
 They mock the connection and never access production. Fetching `/records` from
 Render is the separate end-to-end deployment check.
+
+On October 24, 2026, I verified the initial Render deployment against the
+production database: `/records` returned all three sample rows; pagination and
+empty pages worked; an invalid limit returned 422; and `/health`, `/docs`, and
+`/openapi.json` returned 200. The seven automated tests, Ruff checks, formatting,
+dependency compatibility check, and Render public JSON Schema validation passed.
+This records that verification, rather than guaranteeing future service uptime.
 
 ## Troubleshooting
 
