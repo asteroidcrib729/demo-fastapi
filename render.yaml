@@ -1,0 +1,19 @@
+# Reference configuration for one API service. Prisma hosts the only database.
+previews:
+  generation: "off"
+
+services:
+  - type: web
+    name: fastapi-prisma-records-api
+    runtime: python
+    plan: free
+    region: singapore
+    branch: main
+    autoDeployTrigger: commit
+    buildCommand: uv sync --locked --no-dev
+    startCommand: uv run --locked --no-dev --no-sync uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: UV_VERSION
+        value: "0.12.9"
+      - key: DATABASE_URL
+        sync: false

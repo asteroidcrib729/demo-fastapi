@@ -1,5 +1,11 @@
 .env
+.env.*
+!.env.example
+.venv*/
+.uv-cache/
+__pycache__/
+*.py[cod]
+.ruff_cache/
+.vscode/
 main.ipynb
-.venv/**
-.vscode/**
 pyrefly.toml
