@@ -21,6 +21,7 @@ API: [fetch records](https://demo-fast-api-97ia.onrender.com)
 - [Source code walkthrough](#source-code-walkthrough)
 - [Verification](#verification)
 - [Troubleshooting](#troubleshooting)
+- [License](#license)
 
 ## How it works
 
@@ -57,7 +58,7 @@ data; it does not recover the deleted records.
 | [`main.py`](main.py) | Application, response model, health endpoint, and SQL read endpoint. |
 | [`setup_database.py`](setup_database.py) | Explicit, manual database initialization command. |
 | [`schema.sql`](schema.sql) | Table definition and three public sample records. |
-| [`pyproject.toml`](pyproject.toml) | Metadata, Python 3.14.7 requirement, dependencies, Ruff rules, and Pyrefly configuration. |
+| [`pyproject.toml`](pyproject.toml) | Metadata, Apache-2.0 license declaration, Python 3.14.7 requirement, dependencies, Ruff rules, and Pyrefly configuration. |
 | [`uv.lock`](uv.lock) | Exact dependency versions for repeatable installation. |
 | [`.python-version`](.python-version) | Pins Python 3.14.7 for uv and Render. |
 | [`.env.example`](.env.example) | Placeholder connection strings without real credentials. |
@@ -66,7 +67,9 @@ data; it does not recover the deleted records.
 | [`.gitignore`](.gitignore) | Excludes credentials, environments, caches, and private editor settings. |
 | [`.vscode/settings.json`](.vscode/settings.json) | Workspace interpreter and `.env.local` selection. |
 | [`.vscode/extensions.json`](.vscode/extensions.json) | Python and Pyrefly extension recommendations. |
-| [`README.md`](README.md) | Architecture, commands, deployment, and source explanation. |
+| [`README.md`](README.md) | Architecture, commands, deployment, source explanation, and licensing. |
+| [`LICENSE`](LICENSE) | Full Apache License, Version 2.0. |
+| [`NOTICE`](NOTICE) | Original author and repository attribution. |
 
 `pyproject.toml` and `uv.lock` replace `requirements.txt`; `render.yaml` replaces
 `railway.toml`. Local credentials, environments, and private editor settings
@@ -288,8 +291,9 @@ reviewed SQL rather than destructive resets.
 
 ### Dependency and deployment files
 
-`pyproject.toml` declares runtime dependencies and a development group for HTTP
-testing and linting. `uv.lock` records exact versions across supported platforms.
+`pyproject.toml` declares the Apache-2.0 license, its `LICENSE` and `NOTICE`
+files, runtime dependencies, and a development group for HTTP testing and linting.
+`uv.lock` records exact versions across supported platforms.
 `uv sync --locked` fails if the project and lockfile disagree. Production
 installation omits development tools, and `--no-sync` prevents package changes
 when the service starts.
@@ -329,6 +333,7 @@ This records that verification, rather than guaranteeing future service uptime.
 | Setup says `Set DIRECT_URL` | Supply the direct URL for the same production database. |
 | Setup fails on an existing table | Compare its columns with `schema.sql`; setup does not reset tables. |
 | A page returns `[]` | Check whether the table is empty or the offset exceeds its rows. |
+| Uvicorn fails after moving or renaming the repository | Run `uv sync --locked --reinstall` from the new root to regenerate launchers with current paths. Add `--offline` if all locked packages are cached. |
 | Render rejects the lockfile | Run `uv lock` after dependency changes and commit both dependency files. |
 | Render cannot bind the port | Use `0.0.0.0` and `$PORT`, as configured above. |
 | The first request takes longer | Allow time for a free service to wake from idle sleep. |
@@ -336,3 +341,20 @@ This records that verification, rather than guaranteeing future service uptime.
 References: [uv with FastAPI](https://docs.astral.sh/uv/guides/integration/fastapi/),
 [Psycopg](https://www.psycopg.org/psycopg3/docs/basic/usage.html), and
 [Render Blueprints](https://render.com/docs/blueprint-spec).
+
+## License
+
+I license my original source code and documentation under the
+[Apache License, Version 2.0](LICENSE). Copyright 2026 Faraz Hussain
+([asteroidcrib729](https://github.com/asteroidcrib729)). The [NOTICE](NOTICE)
+identifies me and the [original repository](https://github.com/asteroidcrib729/demo-fastapi).
+
+You may use, modify, and redistribute this project, including commercially,
+under the license's terms. When redistributing it or derivative works, include
+a copy of the license, retain applicable attribution and legal notices, add
+prominent change notices to modified files, and preserve the relevant NOTICE
+attribution in a form allowed by Section 4. A visible application banner is not required. The license includes
+an express patent grant and provides the work without warranties; read the full
+license for its conditions and limitations.
+
+Third-party dependencies remain subject to their own licenses.

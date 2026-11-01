@@ -3,6 +3,8 @@ name = "demo-fastapi"
 version = "1.0.0"
 description = "A small FastAPI service that reads demonstration records from Prisma Postgres."
 readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
 requires-python = "==3.14.7"
 dependencies = [
     "fastapi>=0.139,<1",
